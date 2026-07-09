@@ -1,0 +1,5 @@
+# Core Anthropic integration
+anthropic>=0.40.0
+
+# Environment variable management (.env file helper)
+python-dotenv>=1.0.0
