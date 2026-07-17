@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: a2_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-a2db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: a2_spring_app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - STORAGE_TYPE=${STORAGE_TYPE:-postgres}
+      - DATABASE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-a2db}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - DDL_AUTO=${DDL_AUTO:-update}
+      - SHOW_SQL=${SHOW_SQL:-false}
+      - FLYWAY_ENABLED=${FLYWAY_ENABLED:-true}
+      - PORT=${PORT:-8080}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target:/app/target
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
