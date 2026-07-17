@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Bookstore - Practice Scraping Site</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 28px;
+        }
+        header p {
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .book-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        .book-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .book-author {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .book-author span {
+            font-weight: bold;
+            color: #34495e;
+        }
+        .book-description {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 12px;
+        }
+        .book-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .book-price .currency {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .book-rating {
+            color: #f39c12;
+            font-size: 16px;
+        }
+        .book-stock {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .book-stock.out-of-stock {
+            background: #fce4ec;
+            color: #c62828;
+        }
+        .book-category {
+            display: inline-block;
+            font-size: 11px;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-top: 8px;
+        }
+        .pagination {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .pagination a {
+            display: inline-block;
+            padding: 10px 16px;
+            margin: 0 4px;
+            background: white;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .pagination a.active {
+            background: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+        .pagination a:hover {
+            background: #ecf0f1;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Workshop Bookstore</h1>
+            <p>Your practice scraping site for the workshop pipeline (fetch → parse → extract → clean → structure)</p>
+            <p style="font-size:12px; margin-top:8px; opacity:0.6;">🤖 Polite scraping allowed - 1 second delay please</p>
+        </header>
+
+        <div class="books-grid">
+            <!-- Book 1 -->
+            <div class="book-card" data-id="1">
+                <div class="book-title">The Pragmatic Programmer</div>
+                <div class="book-author">by <span>David Thomas</span></div>
+                <div class="book-description">Your journey to mastery. 20th Anniversary Edition. Classic guide to software engineering.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>49.99</div>
+                    <div class="book-rating">★★★★★ (342)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">Programming</div>
+            </div>
+
+            <!-- Book 2 -->
+            <div class="book-card" data-id="2">
+                <div class="book-title">Clean Code</div>
+                <div class="book-author">by <span>Robert C. Martin</span></div>
+                <div class="book-description">A handbook of agile software craftsmanship. Essential reading for every developer.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>39.95</div>
+                    <div class="book-rating">★★★★☆ (512)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">Programming</div>
+            </div>
+
+            <!-- Book 3 -->
+            <div class="book-card" data-id="3">
+                <div class="book-title">Design Patterns</div>
+                <div class="book-author">by <span>Erich Gamma</span></div>
+                <div class="book-description">Elements of Reusable Object-Oriented Software. The Gang of Four classic.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>54.99</div>
+                    <div class="book-rating">★★★★☆ (289)</div>
+                </div>
+                <div class="book-stock out-of-stock">✕ Out of Stock</div>
+                <div class="book-category">Design</div>
+            </div>
+
+            <!-- Book 4 -->
+            <div class="book-card" data-id="4">
+                <div class="book-title">The Art of Computer Programming</div>
+                <div class="book-author">by <span>Donald Knuth</span></div>
+                <div class="book-description">Volume 1: Fundamental Algorithms. The bible of computer science.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>79.99</div>
+                    <div class="book-rating">★★★★★ (156)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">Computer Science</div>
+            </div>
+
+            <!-- Book 5 -->
+            <div class="book-card" data-id="5">
+                <div class="book-title">Introduction to Algorithms</div>
+                <div class="book-author">by <span>Thomas Cormen</span></div>
+                <div class="book-description">The MIT Press classic. Comprehensive guide to algorithms and data structures.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>89.99</div>
+                    <div class="book-rating">★★★★★ (423)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">Computer Science</div>
+            </div>
+
+            <!-- Book 6 -->
+            <div class="book-card" data-id="6">
+                <div class="book-title">Database System Concepts</div>
+                <div class="book-author">by <span>Abraham Silberschatz</span></div>
+                <div class="book-description">The definitive guide to database systems. Covers SQL, design, and implementation.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>65.00</div>
+                    <div class="book-rating">★★★★☆ (198)</div>
+                </div>
+                <div class="book-stock out-of-stock">✕ Out of Stock</div>
+                <div class="book-category">Databases</div>
+            </div>
+
+            <!-- Book 7 -->
+            <div class="book-card" data-id="7">
+                <div class="book-title">Artificial Intelligence: A Modern Approach</div>
+                <div class="book-author">by <span>Stuart Russell</span></div>
+                <div class="book-description">The most comprehensive AI textbook. Covers agents, search, learning, and more.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>74.95</div>
+                    <div class="book-rating">★★★★★ (678)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">AI / Machine Learning</div>
+            </div>
+
+            <!-- Book 8 -->
+            <div class="book-card" data-id="8">
+                <div class="book-title">Computer Networking: A Top-Down Approach</div>
+                <div class="book-author">by <span>James Kurose</span></div>
+                <div class="book-description">Top-down approach to networking. Includes socket programming and network applications.</div>
+                <div class="book-meta">
+                    <div class="book-price"><span class="currency">$</span>59.99</div>
+                    <div class="book-rating">★★★★☆ (267)</div>
+                </div>
+                <div class="book-stock">✓ In Stock</div>
+                <div class="book-category">Networking</div>
+            </div>
+        </div>
+
+        <!-- Pagination (for practicing multi-page scraping) -->
+        <div class="pagination">
+            <a href="?page=1" class="active">1</a>
+            <a href="?page=2">2</a>
+            <a href="?page=3">3</a>
+            <a href="?page=4">4</a>
+            <a href="?page=2">Next →</a>
+        </div>
+
+        <footer>
+            <p>🤖 Workshop Scraping Practice Site • Made for educational purposes • Please scrape politely</p>
+            <p style="font-size:12px; margin-top:5px;">This page contains 8 books with title, author, description, price, rating, stock, and category</p>
+        </footer>
+    </div>
+</body>
+</html>
