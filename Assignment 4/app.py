@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.security import HTTPBearer  # ← ADD THIS
+from fastapi.security import HTTPBearer
 from pydantic import BaseModel, EmailStr
 import sqlite3
 from contextlib import contextmanager
